@@ -1,0 +1,22 @@
+{
+  "name": "book-store",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Full-stack Book Store (React + Express + MongoDB)",
+  "scripts": {
+    "postinstall": "npm install --prefix server && npm install --prefix client && node scripts/setup-env.js",
+    "setup": "node scripts/setup-env.js",
+    "dev": "concurrently -k -n api,web -c yellow,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "seed": "npm run seed --prefix server --",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server",
+    "smoke": "npm run smoke --prefix server"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
