@@ -12,7 +12,7 @@
     "smoke": "node smoke-test.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19.0"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
