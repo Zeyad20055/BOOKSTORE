@@ -14,7 +14,7 @@
     "smoke": "npm run smoke --prefix server"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12.0"
   },
   "devDependencies": {
     "concurrently": "^10.0.6"
