@@ -18,10 +18,13 @@ export async function connectDB() {
     console.log(`[db] Connected to MongoDB (${mongoose.connection.name})`);
   } catch (err) {
     const errorName = err instanceof Error ? err.name : 'UnknownError';
+    const errorMessage = err instanceof Error
+      ? err.message.replace(/mongodb(?:\+srv)?:\/\/[^\s"'<>]+/gi, '[REDACTED_MONGODB_URI]')
+      : 'Unknown error';
     const errorCode = typeof err?.code === 'string' && /^[A-Z0-9_]+$/.test(err.code)
       ? ` (${err.code})`
       : '';
-    console.error(`[db] MongoDB connection failed: ${errorName}${errorCode}.`);
+    console.error(`[db] MongoDB connection failed: ${errorName}${errorCode}: ${errorMessage}`);
     console.error('[db] The API remains available with database-dependent routes returning 503. Retrying in 5s...');
     clearTimeout(retryTimer);
     retryTimer = setTimeout(() => { void connectDB(); }, 5000);
