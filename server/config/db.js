@@ -17,18 +17,16 @@ export async function connectDB() {
     await mongoose.connect(env.MONGODB_URI, { serverSelectionTimeoutMS: 5000 });
     console.log(`[db] Connected to MongoDB (${mongoose.connection.name})`);
   } catch (err) {
-    console.error(`[db] Could not connect to MongoDB at ${redact(env.MONGODB_URI)}`);
-    console.error(`[db] ${err.message}`);
-    console.error('[db] Start a local MongoDB or set MONGODB_URI to a MongoDB Atlas string in server/.env. Retrying in 5s...');
+    const errorName = err instanceof Error ? err.name : 'UnknownError';
+    const errorCode = typeof err?.code === 'string' && /^[A-Z0-9_]+$/.test(err.code)
+      ? ` (${err.code})`
+      : '';
+    console.error(`[db] MongoDB connection failed: ${errorName}${errorCode}.`);
+    console.error('[db] The API remains available with database-dependent routes returning 503. Retrying in 5s...');
     clearTimeout(retryTimer);
-    retryTimer = setTimeout(connectDB, 5000);
+    retryTimer = setTimeout(() => { void connectDB(); }, 5000);
   }
 }
 
 mongoose.connection.on('disconnected', () => console.warn('[db] MongoDB disconnected'));
 mongoose.connection.on('reconnected', () => console.log('[db] MongoDB reconnected'));
-
-// Hide credentials when printing a connection string.
-function redact(uri) {
-  return uri.replace(/\/\/([^:@/]+):([^@]+)@/, '//$1:****@');
-}

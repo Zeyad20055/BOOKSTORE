@@ -267,7 +267,7 @@ git push -u origin main
 ## Deployment guidance
 
 * **Database**: use MongoDB Atlas. Create a dedicated database user, restrict network access to your host's IPs where possible, and use the `mongodb+srv://` string as `MONGODB_URI`.
-* **Option 1, one service** (simplest): deploy the whole repo to a Node host (Render, Railway, Fly.io, a VPS). Build command `npm install && npm run build`, start command `npm start`, and set `NODE_ENV=production`, `MONGODB_URI`, `JWT_SECRET`. Run `npm run seed` once (from your machine pointing at Atlas, or from the host's shell) to create the admin.
+* **Option 1, one service** (simplest): deploy the whole repo to a Node host (Render, Railway, Fly.io, a VPS). Build command `npm install && npm run build`, start command `npm start`, and set `NODE_ENV=production`, `MONGODB_URI`, `JWT_SECRET`. On Railway, add `MONGODB_URI` as a service environment variable with the MongoDB Atlas connection string (including the `book_store` database name); production does not fall back to local MongoDB. Run `npm run seed` once (from your machine pointing at Atlas, or from the host's shell) to create the admin.
 * **Option 2, separate hosts**: deploy `server/` as a Node service (start `npm start`, set `CLIENT_URL` to your front-end's exact origin) and `client/` to a static host (Netlify, Vercel, Cloudflare Pages) with build `npm run build`, output `dist`, and `VITE_API_URL=https://<your-api-host>/api`. Add a rewrite of all paths to `/index.html` so React Router deep links work.
 * Always serve over HTTPS and keep `JWT_SECRET` out of the repository.
 
